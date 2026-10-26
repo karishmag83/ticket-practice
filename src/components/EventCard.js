@@ -10,7 +10,9 @@ export default function EventCard({ event }) {
       <Text style={styles.meta}>
         {event.venue}, {date.toLocaleDateString()}
       </Text>
-      <Text style={styles.price}>${event.price}</Text>
+      <Text style={styles.price}>
+        {event.price === 0 ? 'Free' : `$${event.price}`}
+      </Text>
     </View>
   );
 }
