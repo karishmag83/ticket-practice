@@ -27,7 +27,8 @@ const OWNED = [
 const DROP_ENDS_AT = Date.now() + 15 * 1000;
 
 export default function CollectiblesScreen() {
-  const ownedCount = OWNED.length;
+  const ownedPieceIds = new Set(OWNED.map((item) => item.collectibleId));
+  const ownedCount = SET.pieces.filter((piece) => ownedPieceIds.has(piece.id)).length;
   const total = SET.pieces.length;
   const left = total - ownedCount;
 
@@ -45,7 +46,7 @@ export default function CollectiblesScreen() {
       </View>
 
       {SET.pieces.map((piece) => {
-        const owned = OWNED.some((o) => o.collectibleId === piece.id);
+        const owned = ownedPieceIds.has(piece.id);
         return (
           <View key={piece.id} style={[styles.piece, !owned && styles.pieceMissing]}>
             <Text style={styles.pieceName}>{piece.name}</Text>

@@ -10,15 +10,17 @@ const TICKETS = [
 
 export default function MyTicketsScreen() {
   const [sortBy, setSortBy] = useState('date');
-  const [claimed, setClaimed] = useState([]); // positions of claimed tickets
+  const [claimed, setClaimed] = useState([]);
 
   const sorted = [...TICKETS].sort((a, b) =>
     sortBy === 'date' ? new Date(a.date) - new Date(b.date) : a.price - b.price
   );
 
-  const toggleClaim = (index) => {
+  const toggleClaim = (ticketId) => {
     setClaimed((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+      prev.includes(ticketId)
+        ? prev.filter((id) => id !== ticketId)
+        : [...prev, ticketId]
     );
   };
 
@@ -41,9 +43,9 @@ export default function MyTicketsScreen() {
       </View>
       <FlatList
         data={sorted}
-        keyExtractor={(item, index) => String(index)}
-        renderItem={({ item, index }) => {
-          const isClaimed = claimed.includes(index);
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          const isClaimed = claimed.includes(item.id);
           return (
             <View style={styles.card}>
               <View style={{ flex: 1 }}>
@@ -53,7 +55,7 @@ export default function MyTicketsScreen() {
                 </Text>
               </View>
               <Pressable
-                onPress={() => toggleClaim(index)}
+                onPress={() => toggleClaim(item.id)}
                 style={[styles.claimButton, isClaimed && styles.claimButtonDone]}
               >
                 <Text style={[styles.claimText, isClaimed && styles.claimTextDone]}>
